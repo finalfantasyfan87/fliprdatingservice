@@ -1,13 +1,18 @@
 package com.dating.repository;
 
+import org.springframework.data.mongodb.repository.Query;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+
 import com.dating.model.User;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import java.util.List;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-public interface UserMongoRepository extends MongoRepository<User, String> {
+public interface UserMongoRepository extends ReactiveMongoRepository<User, String> {
 
-    List<User> findAllByZodiacSign(String zodiacSign);
-   List<String> findInterestsById(String id);
-   User findUserByUserName(String userName);
+    Flux<User> findAllByZodiacSign(String zodiacSign);
 
+    Mono<User> findUserByUserName(String userName);
+
+    @Query(value = "{ '_id': ?0 }", fields = "{ 'interests': 1 }")
+    Mono<User> findProjectedInterestsById(String id);
 }

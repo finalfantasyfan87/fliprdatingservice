@@ -2,14 +2,19 @@ package com.dating.service;
 
 import com.dating.model.User;
 
-import java.util.List;
-import java.util.Optional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 public interface UserService {
-   public Optional<User> getUserById(String id);
-   public List<User> getUsersByZodiacSign(String zodiacSign);
-   public List<User> getAllUsers();
-   public List<String> getInterestsById(String id);
-   public User findUserByUserName(String userName);
-   public User saveUser(User user);
+    Mono<User> getUserById(String id);
+
+    Flux<User> getUsersByZodiacSign(String zodiacSign);
+
+    Flux<User> getAllUsers();
+
+    Flux<String> getInterestsById(String id);
+
+    Mono<User> findUserByUserName(String userName);
+
+    Mono<User> saveUser(User user);
 }

@@ -3,7 +3,6 @@ package com.dating.utility;
 import com.dating.model.User;
 import com.github.javafaker.Faker;
 
-import java.util.Arrays;
 import java.util.List;
 
 public final class UserDataFactory {
@@ -16,17 +15,18 @@ public final class UserDataFactory {
     }
 
     public static User createDemoUser() {
-        User user = new User();
-        user.setId(FAKER.numerify("13252350sgew353tyugh"));
-        user.setUserName(FAKER.name().username());
-        user.setEmail(FAKER.internet().emailAddress());
-        user.setPassword(FAKER.gameOfThrones().house());
-        user.setGender(FAKER.demographic().sex());
-        user.setInterests(Arrays.asList(
-                FAKER.book().title(),
-                FAKER.gameOfThrones().character(),
-                FAKER.gameOfThrones().quote()));
-        user.setZodiacSign(ZODIAC_SIGNS.get(FAKER.random().nextInt(0, ZODIAC_SIGNS.size() - 1)));
-        return user;
+        return new User(
+                FAKER.numerify("13252350sgew353tyugh"),
+                FAKER.internet().emailAddress(),
+                FAKER.name().username(),
+                null,
+                FAKER.gameOfThrones().house(),
+                FAKER.demographic().sex(),
+                List.of(
+                        FAKER.book().title(),
+                        FAKER.gameOfThrones().character(),
+                        FAKER.gameOfThrones().quote()),
+                ZODIAC_SIGNS.get(FAKER.random().nextInt(0, ZODIAC_SIGNS.size() - 1)),
+                List.of());
     }
 }

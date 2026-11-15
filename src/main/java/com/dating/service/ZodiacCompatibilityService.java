@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Mono;
 
 @Service
 public class ZodiacCompatibilityService {
@@ -48,13 +49,15 @@ public class ZodiacCompatibilityService {
      *
      * @throws IllegalArgumentException if either sign is null, blank, or not a zodiac sign
      */
-    public int getCompatibilityScore(String sign1, String sign2) {
-        String first = normalize(sign1);
-        String second = normalize(sign2);
-        if (first.equals(second)) {
-            return 60;
-        }
-        return ZODIAC_COMPATABILITY_MAP.getOrDefault(getCompatibilityKey(first, second), 50);
+    public Mono<Integer> getCompatibilityScore(String sign1, String sign2) {
+        return Mono.fromSupplier(() -> {
+            String first = normalize(sign1);
+            String second = normalize(sign2);
+            if (first.equals(second)) {
+                return 60;
+            }
+            return ZODIAC_COMPATABILITY_MAP.getOrDefault(getCompatibilityKey(first, second), 50);
+        });
     }
 
     private static String normalize(String sign) {

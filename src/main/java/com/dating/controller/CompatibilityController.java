@@ -1,8 +1,8 @@
 package com.dating.controller;
 
 import com.dating.service.ZodiacCompatibilityService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 import java.util.Map;
 
@@ -18,9 +18,9 @@ public class CompatibilityController {
     }
 
     @GetMapping("/compatibility")
-    public ResponseEntity<Map<String, Integer>> getCompatibility(@RequestParam String first,
-                                                                 @RequestParam String second) {
-        int score = zodiacCompatibilityService.getCompatibilityScore(first, second);
-        return ResponseEntity.ok(Map.of("score", score));
+    public Mono<Map<String, Integer>> getCompatibility(@RequestParam String first,
+                                                       @RequestParam String second) {
+        return zodiacCompatibilityService.getCompatibilityScore(first, second)
+                .map(score -> Map.of("score", score));
     }
 }
