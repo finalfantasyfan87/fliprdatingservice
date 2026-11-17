@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: flippr
+  # Uncomment and configure when enabling MongoDB.
+  data:
+    mongodb:
+      uri: ${MONGODB_URI}
+
+server:
+  port: 9090

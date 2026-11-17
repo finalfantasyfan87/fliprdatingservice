@@ -15,6 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @WebFluxTest(UserController.class)
@@ -62,5 +63,21 @@ class GlobalExceptionHandlerTest {
                 .expectBody()
                 .jsonPath("$.code").isEqualTo("BAD_REQUEST")
                 .jsonPath("$.message").isEqualTo("A valid email address is required");
+    }
+
+    @Test
+    @DisplayName("POST /userapi/addUser returns a generic error when persistence fails")
+    void addUserReturnsGenericErrorWhenPersistenceFails() {
+        when(userService.saveUser(any(User.class)))
+                .thenReturn(Mono.error(new IllegalStateException("Database unavailable")));
+
+        webTestClient.post().uri("/userapi/addUser")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(user)
+                .exchange()
+                .expectStatus().is5xxServerError()
+                .expectBody()
+                .jsonPath("$.code").isEqualTo("INTERNAL_SERVER_ERROR")
+                .jsonPath("$.message").isEqualTo("An unexpected error occurred");
     }
 }
